@@ -18,23 +18,25 @@ jobs:
       with:
         r-version: '4.4.3'  # Specify the R version you need
 
+    - name: Set R_LIBS_USER environment variable
+      run: echo "R_LIBS_USER=${{ runner.temp }}/R/library" >> $GITHUB_ENV
+
     - name: Restore R package cache
       uses: actions/cache@v2
       with:
-        path: ${{ env.R_LIBS_USER }}
+        path: ${{ runner.temp }}/R/library
         key: ${{ runner.os }}-r-${{ hashFiles('renv.lock') }}
         restore-keys: ${{ runner.os }}-r-
 
     - name: Install dependencies
       run: |
         install.packages(c("dplyr", "readr", "httr", "jsonlite",
-          "purrr", "janitor", "glue","tidyr"))
+          "purrr", "janitor", "glue", "tidyr"))
       shell: Rscript {0}
 
     - name: Run R script
       run: Scripts/fetch_who_indicator.R  # Replace with your R script name
-      
-            # Step 7: Upload the pulled data as an artifact
+
     - name: Upload WHO data
       uses: actions/upload-artifact@v4
       with:
