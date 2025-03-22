@@ -1,0 +1,35 @@
+name: R Package Installation Workflow
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  install-packages:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up R
+        uses: r-lib/actions/setup-r@v2
+
+      - name: Cache R packages
+        id: cache-r-packages
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: r-packages-${{ hashFiles('DESCRIPTION') }}  # Use DESCRIPTION file for cache key
+          restore-keys: |
+            r-packages-
+
+      - name: Install R packages (if not cached)
+        if: steps.cache-r-packages.outputs.cache-hit != 'true'
+        run: |
+          Rscript -e 'install.packages(c("dplyr", "readr", "httr", "jsonlite",
+          "purrr", "janitor", "glue","tidyr" ), lib = Sys.getenv("R_LIBS_USER"))'
+
+      - name: Run R script
+        run: Rscript scripts/create_r_cache.R

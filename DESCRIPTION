@@ -1,0 +1,11 @@
+Package: my-r-project
+Version: 1.0
+Depends:
+  readr,
+  dplyr,
+  httr,
+  jsonlite,
+  purrr,
+  tidyr,
+  janitor,
+  glue
