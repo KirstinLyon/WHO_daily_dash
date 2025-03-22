@@ -37,4 +37,4 @@ jobs:
           "purrr", "janitor", "glue","tidyr" ), lib = Sys.getenv("R_LIBS_USER"))'
 
       - name: Run R script
-        run: Rscript scripts/create_r_cache.R
+        run: Rscript Scripts/create_r_cache.R
