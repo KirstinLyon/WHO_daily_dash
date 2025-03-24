@@ -25,18 +25,13 @@ jobs:
 
     - name: Install dependencies
       run: |
-        install.packages(c("dplyr", "readr", "httr", "jsonlite",
-          "purrr", "janitor", "glue", "tidyr"))
-      shell: Rscript {0}
-
-    - name: Set execute permission for R script
-      run: chmod +x Scripts/fetch_who_indicator.R
+        R -e "install.packages(c('dplyr', 'readr', 'httr', 'jsonlite', 'purrr', 'janitor', 'glue', 'tidyr'))"
 
     - name: Run R script
-      run: Scripts/fetch_who_indicator.R  # Replace with your R script name
+      run: Rscript Scripts/fetch_who_indicator.R  # Replace with your R script name
 
     - name: Upload WHO data
       uses: actions/upload-artifact@v4
       with:
         name: who_sample_data
-        path: who_sample_data.csv
+        path: Dataout/who_data_*.csv
