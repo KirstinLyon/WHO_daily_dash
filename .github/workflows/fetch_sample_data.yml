@@ -1,5 +1,8 @@
 name: Fetch sample data from WHO daily
 
+permissions:
+  contents: write
+
 on:
   schedule:
     - cron: '0 0 * * *'  # Runs daily at midnight UTC
@@ -50,4 +53,4 @@ jobs:
         git config --global user.name "Your Name"
         git add Dataout/*.csv
         git commit -m "Update WHO data"
-        git push https://${WHO_DAILY_DASH_AUTOMATION_TOKEN}@github.com/${{ github.repository }}.git HEAD:main
+        git push https://${{ secrets.WHO_DAILY_DASH_AUTOMATION_TOKEN }}@github.com/${{ github.repository }}.git HEAD:main
