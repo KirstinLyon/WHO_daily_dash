@@ -27,11 +27,16 @@ jobs:
       run: |
         R -e "install.packages(c('dplyr', 'readr', 'httr', 'jsonlite', 'purrr', 'janitor', 'glue', 'tidyr'))"
 
+    - name: Create Dataout directory
+      run: mkdir -p Dataout
+
     - name: Run R script
       run: Rscript Scripts/fetch_who_indicator.R  # Replace with your R script name
 
-    - name: Upload WHO data
-      uses: actions/upload-artifact@v4
-      with:
-        name: who_sample_data
-        path: Dataout/who_data_*.csv
+    - name: Commit data to repository
+      run: |
+        git config --global user.email "you@example.com"
+        git config --global user.name "Your Name"
+        git add Dataout/*.csv
+        git commit -m "Update WHO data"
+        git push

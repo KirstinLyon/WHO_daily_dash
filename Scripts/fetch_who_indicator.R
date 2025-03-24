@@ -108,8 +108,8 @@ data_clean <- data |>
     left_join(all_indicators, by = c("indicator_code" = "IndicatorCode") ) |> 
     left_join(all_dimension, by = c("dim1type" = "Code")) 
 
-# SAVE DATA LOCALLY ------------------------------------------------------
-indicator_id <- unique(data$IndicatorCode)
-write_csv(data_clean, glue("Dataout/who_data_{indicator_id}.csv"))
+# SAVE DATA LOCALLY ONLY FOR TEST PURPOSES  ------------------------------------------------------
+#indicator_id <- unique(data$IndicatorCode)
+#write_csv(data_clean, glue("Dataout/who_data_{indicator_id}.csv"))
 
 
