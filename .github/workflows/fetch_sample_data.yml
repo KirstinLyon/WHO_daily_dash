@@ -6,7 +6,7 @@ on:
   workflow_dispatch:  # Allows manual triggering from GitHub UI
 
 jobs:
-  run-script:
+  fetch_data:
     runs-on: ubuntu-latest
 
     steps:
@@ -31,7 +31,16 @@ jobs:
       run: mkdir -p Dataout
 
     - name: Run R script
-      run: Rscript Scripts/fetch_who_indicator.R  # Replace with your R script name
+      run: Rscript Scripts/fetch_who_indicator.R  # Run the script from the Scripts directory
+
+    - name: Check for Dataout files
+      run: |
+        if ls Dataout/*.csv 1> /dev/null 2>&1; then
+          echo "Files found."
+        else
+          echo "No files found in Dataout directory."
+          exit 1
+        fi
 
     - name: Commit data to repository
       run: |

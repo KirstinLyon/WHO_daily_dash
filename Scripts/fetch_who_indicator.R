@@ -112,4 +112,6 @@ data_clean <- data |>
 #indicator_id <- unique(data$IndicatorCode)
 #write_csv(data_clean, glue("Dataout/who_data_{indicator_id}.csv"))
 
+write_csv(data_clean, "Dataout/who_data.csv")
+
 
