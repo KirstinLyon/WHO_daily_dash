@@ -12,7 +12,7 @@
 .quarto
 
 #no data
-*.csv
+
 *.gz
 *.txt
 *.rds
@@ -42,4 +42,4 @@ GIS/*
 Images/*
 Graphics/*
 Data/*
-Dataout/*
+
