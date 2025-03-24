@@ -18,15 +18,15 @@ jobs:
       with:
         r-version: '4.4.3'  # Specify the R version you need
 
-    - name: Set R_LIBS_USER environment variable
-      run: echo "R_LIBS_USER=${{ runner.temp }}/R/library" >> $GITHUB_ENV
+#    - name: Set R_LIBS_USER environment variable
+#      run: echo "R_LIBS_USER=${{ runner.temp }}/R/library" >> $GITHUB_ENV
 
-    - name: Restore R package cache
-      uses: actions/cache@v2
-      with:
-        path: ${{ runner.temp }}/R/library
-        key: ${{ runner.os }}-r-${{ hashFiles('renv.lock') }}
-        restore-keys: ${{ runner.os }}-r-
+ #   - name: Restore R package cache
+#      uses: actions/cache@v2
+#      with:
+#        path: ${{ runner.temp }}/R/library
+#        key: ${{ runner.os }}-r-${{ hashFiles('renv.lock') }}
+#        restore-keys: ${{ runner.os }}-r-
 
     - name: Install dependencies
       run: |
