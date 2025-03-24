@@ -37,9 +37,10 @@ convert_JSON_to_tbl <- function(url){
     data <- GET(url)
     data_df <- fromJSON(content(data, as = "text", encoding = "utf-8"))
     data_tbl <-  map_if(data_df, is.data.frame, list) |> 
-        as_tibble |> 
+        as_tibble() |> 
         unnest(cols = c(value)) |> 
         select(-'@odata.context')
+    return(data_tbl)
 }
 
 
