@@ -60,6 +60,7 @@ convert_JSON_to_tbl <- function(url){
 find_indicator <- function(all_indicators, URL_BASE) {
     indicator_data_tbl <- tibble()  # Initialize as an empty tibble
     
+    #keep looking for a new indicator if you find one that is empty
     while (nrow(indicator_data_tbl) == 0) {
         # Select a random indicator
         random_indicator <- all_indicators |>
@@ -80,6 +81,7 @@ find_indicator <- function(all_indicators, URL_BASE) {
     return(indicator_data_tbl)
 }
 
+
 # GET DATA ------------------------------------------------------------------
 
 all_dimension <-  convert_JSON_to_tbl("https://ghoapi.azureedge.net/api/Dimension") 
@@ -99,19 +101,24 @@ all_regions <- all_spatial |>
     distinct() |> 
     filter(!is.na(parent_location_code))
 
-data_clean <- data |> 
-    clean_names() |> 
-    select(-c(id, parent_location, comments,
-                   value,date, time_dimension_begin, time_dimension_end)) |> 
+data <- tibble() 
+
+while(nrow(data) == 0) {
+    data <- find_indicator(all_indicators, URL_BASE) |> 
+        clean_names() |> 
+        filter(!is.na(numeric_value)) |> 
+        filter(spatial_dim_type == "COUNTRY")
+    
+}
+
+data_final <- data |> 
+    filter(spatial_dim_type == "COUNTRY") |>
     left_join(all_countries, by = "spatial_dim") |> 
     left_join(all_regions, by = "parent_location_code") |> 
     left_join(all_indicators, by = c("indicator_code" = "IndicatorCode") ) |> 
     left_join(all_dimension, by = c("dim1type" = "Code")) 
 
-# SAVE DATA LOCALLY ONLY FOR TEST PURPOSES  ------------------------------------------------------
-#indicator_id <- unique(data$IndicatorCode)
-#write_csv(data_clean, glue("Dataout/who_data_{indicator_id}.csv"))
-
-write_csv(data_clean, "Dataout/who_data.csv")
+# SAVE DATA  ------------------------------------------------------
+write_csv(data_final, "Dataout/who_data.csv")
 
 
