@@ -87,20 +87,9 @@ find_indicator <- function(all_indicators, URL_BASE) {
 all_dimension <-  convert_JSON_to_tbl("https://ghoapi.azureedge.net/api/Dimension") 
 all_spatial <-  convert_JSON_to_tbl(paste0(URL_BASE,"Dimension/COUNTRY/DimensionValues")) 
 all_indicators <-  convert_JSON_to_tbl(paste0(URL_BASE,"Indicator")) 
-data <- find_indicator(all_indicators, URL_BASE)
 
-# CLEAN DATA ----------------------------------------------------------------
 
-all_countries <- all_spatial |> 
-    select(Code, Title) |> 
-    rename(spatial_dim = Code, country = Title)
-
-all_regions <- all_spatial |> 
-    select(ParentCode, ParentTitle) |> 
-    rename(parent_location_code = ParentCode, region = ParentTitle) |> 
-    distinct() |> 
-    filter(!is.na(parent_location_code))
-
+# Find an indicator that has data and at COUNTRY level
 data <- tibble() 
 
 while(nrow(data) == 0) {
@@ -111,8 +100,22 @@ while(nrow(data) == 0) {
     
 }
 
+# CLEAN DATA ----------------------------------------------------------------
+
+#all countries
+all_countries <- all_spatial |> 
+    select(Code, Title) |> 
+    rename(spatial_dim = Code, country = Title)
+
+#all regions
+all_regions <- all_spatial |> 
+    select(ParentCode, ParentTitle) |> 
+    rename(parent_location_code = ParentCode, region = ParentTitle) |> 
+    distinct() |> 
+    filter(!is.na(parent_location_code))
+
+#create final dataset
 data_final <- data |> 
-    filter(spatial_dim_type == "COUNTRY") |>
     left_join(all_countries, by = "spatial_dim") |> 
     left_join(all_regions, by = "parent_location_code") |> 
     left_join(all_indicators, by = c("indicator_code" = "IndicatorCode") ) |> 
