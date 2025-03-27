@@ -58,27 +58,22 @@ convert_JSON_to_tbl <- function(url){
 #' }
 
 find_indicator <- function(all_indicators, URL_BASE) {
-    indicator_data_tbl <- tibble()  # Initialize as an empty tibble
+    temp <- tibble()  # Initialize as an empty tibble
     
     #keep looking for a new indicator if you find one that is empty
-    while (nrow(indicator_data_tbl) == 0) {
+    while (nrow(temp) == 0) {
         # Select a random indicator
         random_indicator <- all_indicators |>
             sample_n(1) |>
             select(IndicatorCode) |>
             pull()
         
-        # Fetch data for the selected indicator
-        response <- GET(paste0(URL_BASE, random_indicator))
-        indicator_data <- content(response, "text")
-        
-        # Process the fetched data
-        indicator_data_tbl <- fromJSON(indicator_data, simplifyVector = TRUE) |>
-            as_tibble() |>
-            unnest(cols = everything())
+        #fetch indicator data
+        temp <- convert_JSON_to_tbl(paste0(URL_BASE,random_indicator))
+  
     }
     
-    return(indicator_data_tbl)
+    return(temp)
 }
 
 
