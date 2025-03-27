@@ -96,7 +96,8 @@ while(nrow(data) == 0) {
     data <- find_indicator(all_indicators, URL_BASE) |> 
         clean_names() |> 
         filter(!is.na(numeric_value)) |> 
-        filter(spatial_dim_type == "COUNTRY")
+        filter(spatial_dim_type == "COUNTRY") |> 
+        filter(time_dim_type == "YEAR") 
     
 }
 
@@ -107,21 +108,19 @@ all_countries <- all_spatial |>
     select(Code, Title) |> 
     rename(spatial_dim = Code, country = Title)
 
-#all regions
-all_regions <- all_spatial |> 
-    select(ParentCode, ParentTitle) |> 
-    rename(parent_location_code = ParentCode, region = ParentTitle) |> 
-    distinct() |> 
-    filter(!is.na(parent_location_code))
-
 #create final dataset
 data_final <- data |> 
     left_join(all_countries, by = "spatial_dim") |> 
-    left_join(all_regions, by = "parent_location_code") |> 
     left_join(all_indicators, by = c("indicator_code" = "IndicatorCode") ) |> 
-    left_join(all_dimension, by = c("dim1type" = "Code")) 
+    left_join(all_dimension, by = c("dim1type" = "Code")) |> 
+    clean_names() |> 
+    rename(
+           year = time_dim, 
+           iso_code = spatial_dim,
+           region_code = parent_location_code, 
+           region = parent_location
+           ) 
 
 # SAVE DATA  ------------------------------------------------------
 write_csv(data_final, "Dataout/who_data.csv")
-
 
