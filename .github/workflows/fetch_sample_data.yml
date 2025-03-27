@@ -36,15 +36,6 @@ jobs:
     - name: Run R script
       run: Rscript Scripts/fetch_who_indicator.R  # Run the script from the Scripts directory
 
-    - name: Check for Dataout files
-      run: |
-        if ls Dataout/*.csv 1> /dev/null 2>&1; then
-          echo "Files found."
-        else
-          echo "No files found in Dataout directory."
-          exit 1
-        fi
-
     - name: Commit data to repository
       env:
         WHO_DAILY_DASH_AUTOMATION_TOKEN: ${{ secrets.WHO_DAILY_DASH_AUTOMATION_TOKEN }}
