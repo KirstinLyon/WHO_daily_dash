@@ -35,6 +35,13 @@ jobs:
 
     - name: Run R script
       run: Rscript Scripts/fetch_who_indicator.R  # Run the script from the Scripts directory
+      
+    - name: Check for CSV files
+      run: |
+        if [ -z "$(ls -A Dataout/*.csv 2>/dev/null)" ]; then
+          echo "No CSV files found in Dataout directory."
+          exit 1
+        fi
 
     - name: Commit data to repository
       env:
